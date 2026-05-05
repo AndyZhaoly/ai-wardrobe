@@ -67,6 +67,18 @@ class Settings(BaseSettings):
     storage_path: str = Field(default="/data/wardrobe")
     max_upload_size_mb: int = Field(default=10)
 
+    # GPU microservices (GSAM segmentation + IDM-VTON try-on)
+    # These run on a separate GPU machine. Use SSH tunnel if needed:
+    #   ssh -L 8000:localhost:8000 -L 8001:localhost:8001 user@gpu-server
+    gsam_url: str = Field(default="http://localhost:8000")
+    vton_url: str = Field(default="http://localhost:8001")
+
+    # Gemini API — used by the 小镜 agent loop (separate from wardrowbe's OpenAI-compatible AI)
+    gemini_api_key: str | None = Field(default=None)
+
+    # Poshmark browser automation
+    poshmark_browser_data_path: str = Field(default="/data/wardrobe/poshmark_browser_data")
+
     # Background removal
     bg_removal_provider: str = Field(default="rembg")  # "rembg" or "http"
     bg_removal_model: str = Field(default="u2net")  # rembg model name

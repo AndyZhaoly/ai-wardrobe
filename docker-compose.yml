@@ -124,3 +124,7 @@ volumes:
   postgres_data:
   redis_data:
   wardrobe_data:
+  poshmark_browser_data:
+    # Pre-login to Poshmark once by running:
+    #   docker compose run --rm worker python -m app.workers.poshmark_login
+    # Or mount a host directory: poshmark_browser_data: {driver: local, ...}
