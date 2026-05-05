@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5](https://github.com/AndyZhaoly/ai-wardrobe/compare/wardrowbe-v1.2.4...wardrowbe-v1.2.5) (2026-05-05)
+
+
+### 🐛 Bug Fixes
+
+* 39: Add proper error messages for diagnose ([#40](https://github.com/AndyZhaoly/ai-wardrobe/issues/40)) ([f4a71d1](https://github.com/AndyZhaoly/ai-wardrobe/commit/f4a71d15eba68519f59ff571cca0a111d59cc0c7))
+* Add current user check ([84840ab](https://github.com/AndyZhaoly/ai-wardrobe/commit/84840ab8da7727b24f127fa8d8ac18a57fbcbb51))
+* Add missing test:coverage script to package.json ([43b8dfa](https://github.com/AndyZhaoly/ai-wardrobe/commit/43b8dfa6a254c4af67e95b1bb3fefee2eac9d0e4))
+* add missing URL fields to TypeScript interfaces ([6113dd6](https://github.com/AndyZhaoly/ai-wardrobe/commit/6113dd6682227d82dc29251ed9a4fc9054047ad6))
+* **ci:** Fix backend storage path and update Node.js to 20 ([55cda11](https://github.com/AndyZhaoly/ai-wardrobe/commit/55cda11c76e03a490d3faa6981f50016bb1ebfde))
+* enable dev credential login in Docker production builds ([#43](https://github.com/AndyZhaoly/ai-wardrobe/issues/43)) ([9aab711](https://github.com/AndyZhaoly/ai-wardrobe/commit/9aab71185d82a1a789a104abdbb842511285e001))
+* Ensure opensource repo works for new users ([a003dbd](https://github.com/AndyZhaoly/ai-wardrobe/commit/a003dbd1c65c8917148b00ac007b466fb6e3430a))
+* modernize Python type annotations for Ruff linting ([208920b](https://github.com/AndyZhaoly/ai-wardrobe/commit/208920bb1f60318100584fc12a1732154570461b))
+* prevent same-slot item pairing, add socks/tie types, fix UI text… ([#55](https://github.com/AndyZhaoly/ai-wardrobe/issues/55)) ([c457572](https://github.com/AndyZhaoly/ai-wardrobe/commit/c4575720d706d30a432900693983b0a3b38fb1a8))
+* re-fetch items after update/archive/restore to load relationships ([edfa65c](https://github.com/AndyZhaoly/ai-wardrobe/commit/edfa65ce5d9516f61b6094554886f7aec0d452f2))
+* refetch outfit after commit ([f9b3ceb](https://github.com/AndyZhaoly/ai-wardrobe/commit/f9b3ceba0eab745682168151cee3adc112641afc))
+* Resolve all CI quality check failures ([2209cdf](https://github.com/AndyZhaoly/ai-wardrobe/commit/2209cdf66ff86090b95e583a6d587be429c2b357))
+* resolve CI lint/type/test failures from v1.2.0 release ([3568174](https://github.com/AndyZhaoly/ai-wardrobe/commit/35681741610d8f696665b63ffc2ee15ad6c94fea))
+* Resolve lint and format issues ([86799df](https://github.com/AndyZhaoly/ai-wardrobe/commit/86799df4e116e3ab3ee4fde4da64e9b945263dac))
+* Update AccumulatedItem types to match Item interface ([3e85320](https://github.com/AndyZhaoly/ai-wardrobe/commit/3e853208a9b2abd99489415d77c923216825689a))
+* use separate test database instead of falling back to production DB ([019d2e9](https://github.com/AndyZhaoly/ai-wardrobe/commit/019d2e9b54a51c031b72281a2c4080d206a46b76))
+* use separate test database instead of falling back to production DB ([7eae5c9](https://github.com/AndyZhaoly/ai-wardrobe/commit/7eae5c9882e218908ef94fe0a1d413138df1f381))
+
+
+### 📝 Documentation
+
+* improve setup instructions and fix dev mode ([3b567de](https://github.com/AndyZhaoly/ai-wardrobe/commit/3b567de06f49c5fbe04bfbc04c58ccbf3d743d69))
+
+
+### 🔧 Maintenance
+
+* add CLAUDE.md with migration instructions ([e1cf68d](https://github.com/AndyZhaoly/ai-wardrobe/commit/e1cf68d2e1d6aff63dccbc9ce1f2cd0f5814f194))
+* add cognitive cache ([886e65f](https://github.com/AndyZhaoly/ai-wardrobe/commit/886e65f43d5fa89365bb10f122a3066ce7b81551))
+* add git-blame-ignore-revs for formatting commits ([38fcc6f](https://github.com/AndyZhaoly/ai-wardrobe/commit/38fcc6f210089bfd0e2bb7979fbfc26487974ba5))
+* Add pre-commit hooks for lint/format enforcement ([90343d3](https://github.com/AndyZhaoly/ai-wardrobe/commit/90343d39fbfd413bf6bbce273d7c7d5b205ba2cc))
+* Add tsbuildinfo to gitignore ([b5280aa](https://github.com/AndyZhaoly/ai-wardrobe/commit/b5280aa158a3eb9228e712444ec62fef918b094e))
+* fix linting errors and add missing type properties ([f1c4848](https://github.com/AndyZhaoly/ai-wardrobe/commit/f1c484883d766961410977de1a81837679a8630f))
+* **main:** release wardrowbe 1.2.1 ([#16](https://github.com/AndyZhaoly/ai-wardrobe/issues/16)) ([02406b6](https://github.com/AndyZhaoly/ai-wardrobe/commit/02406b6c66303076df10034c49d8240a7fa675cb))
+* **main:** release wardrowbe 1.2.2 ([#44](https://github.com/AndyZhaoly/ai-wardrobe/issues/44)) ([3f9db84](https://github.com/AndyZhaoly/ai-wardrobe/commit/3f9db84670cc334e6179ac836fe2d067f7d88e1d))
+* **main:** release wardrowbe 1.2.3 ([#51](https://github.com/AndyZhaoly/ai-wardrobe/issues/51)) ([6285682](https://github.com/AndyZhaoly/ai-wardrobe/commit/6285682072c17c23c47e22fe08944bbafd50554f))
+* **main:** release wardrowbe 1.2.4 ([#53](https://github.com/AndyZhaoly/ai-wardrobe/issues/53)) ([3aa9bb3](https://github.com/AndyZhaoly/ai-wardrobe/commit/3aa9bb3d584d57ae184edc30ba0c479e7d773998))
+* **release:** Add example screens ([2add224](https://github.com/AndyZhaoly/ai-wardrobe/commit/2add2242a1342de29777fcb4ae74068bb6c8aab1))
+
+
+### 💄 Styling
+
+* Update README badges to for-the-badge style ([#10](https://github.com/AndyZhaoly/ai-wardrobe/issues/10)) ([6eff9e9](https://github.com/AndyZhaoly/ai-wardrobe/commit/6eff9e9278a424ff49e1a9b1d93b5611eb05e123))
+
 ## [1.2.4](https://github.com/Anyesh/wardrowbe/compare/wardrowbe-v1.2.3...wardrowbe-v1.2.4) (2026-04-17)
 
 
