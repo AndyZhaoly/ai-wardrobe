@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from app.models.outfit import Outfit
     from app.models.preference import UserPreference
     from app.models.schedule import Schedule
+    from app.models.tryon import ResaleListing, TryonSession
 
 
 class User(Base):
@@ -73,4 +74,10 @@ class User(Base):
     )
     learning_profile: Mapped[Optional["UserLearningProfile"]] = relationship(
         "UserLearningProfile", back_populates="user", uselist=False, cascade="all, delete-orphan"
+    )
+    tryon_sessions: Mapped[list["TryonSession"]] = relationship(
+        "TryonSession", back_populates="user", cascade="all, delete-orphan"
+    )
+    resale_listings: Mapped[list["ResaleListing"]] = relationship(
+        "ResaleListing", back_populates="user", cascade="all, delete-orphan"
     )

@@ -18,6 +18,7 @@ from app.workers.notifications import (
 )
 from app.workers.settings import get_redis_settings
 from app.workers.tagging import tag_item_image
+from app.workers.vton_job import run_vton_job
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,7 @@ async def shutdown(ctx: dict) -> None:
 class WorkerSettings:
     functions = [
         tag_item_image,
+        run_vton_job,
         send_notification,
         retry_failed_notifications,
         check_scheduled_notifications,

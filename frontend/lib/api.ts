@@ -100,6 +100,19 @@ export const api = {
 
   delete: <T>(endpoint: string, options?: FetchOptions) =>
     fetchApi<T>(endpoint, { ...options, method: 'DELETE' }),
+
+  postForm: async <T>(endpoint: string, formData: FormData): Promise<T> => {
+    const url = `${API_BASE_PATH}${endpoint}`;
+    const headers: Record<string, string> = {};
+    if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
+    const response = await fetch(url, { method: 'POST', headers, body: formData, credentials: 'include' });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      const message = (typeof data.detail === 'string' ? data.detail : null) || 'Upload failed';
+      throw new ApiError(message, response.status, data);
+    }
+    return response.json();
+  },
 };
 
 const handledErrors = new WeakSet<object>();

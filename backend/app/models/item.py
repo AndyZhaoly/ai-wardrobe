@@ -93,6 +93,12 @@ class ClothingItem(Base):
     notes: Mapped[str | None] = mapped_column(Text)
     favorite: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    # AI Mirror extensions (added by migration a1b2c3d4e5f6)
+    mask_image_path: Mapped[str | None] = mapped_column(String(500))
+    is_demo: Mapped[bool] = mapped_column(Boolean, default=False)
+    source: Mapped[str] = mapped_column(String(20), default="upload")
+    # source: 'upload' | 'demo' | 'tryon'
+
     # Lifecycle
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
     archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

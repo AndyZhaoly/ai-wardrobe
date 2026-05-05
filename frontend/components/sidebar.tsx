@@ -15,12 +15,16 @@ import {
   Users,
   Bell,
   HeartHandshake,
+  ScanLine,
+  ShoppingBag,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Wardrobe', href: '/dashboard/wardrobe', icon: Shirt },
+  { name: '智能试衣间', href: '/dashboard/tryon', icon: ScanLine },
+  { name: '闲置变现', href: '/dashboard/resell', icon: ShoppingBag },
   { name: 'Suggest Outfit', href: '/dashboard/suggest', icon: Sparkles },
   { name: 'Outfits', href: '/dashboard/outfits', icon: LayoutGrid },
   { name: 'Pairings', href: '/dashboard/pairings', icon: Layers },
