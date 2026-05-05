@@ -1,23 +1,24 @@
 """
 Try-on API endpoints.
-POST /tryon/selfie         — upload selfie, run GSAM, create TryonSession
-GET  /tryon/{session_id}   — poll session status
-POST /tryon/chat           — chat with 小镜 (SSE streaming)
+
+POST /tryon/selfie              — upload selfie, run GSAM, return session_id
+GET  /tryon/{session_id}        — poll session status
+GET  /tryon/item-image/{item_id} — serve demo item images
+POST /tryon/chat                — stream chat with 小镜 (SSE, async generator)
 """
 
 from __future__ import annotations
 
 import json
 import logging
-import os
 import uuid
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
 from arq import create_pool
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from PIL import Image
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -71,23 +72,17 @@ class ChatRequest(BaseModel):
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
-def _storage_path(*parts: str) -> Path:
-    p = Path(settings.storage_path).joinpath(*parts)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    return p
-
-
-def _image_url(rel_path: str | None) -> str | None:
-    if not rel_path:
-        return None
-    return f"/api/v1/images/{rel_path}"
-
-
 def _save_pil(img: Image.Image, rel_path: str) -> str:
     abs_path = Path(settings.storage_path) / rel_path
     abs_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(str(abs_path))
     return rel_path
+
+
+def _result_image_url(rel_path: str | None) -> str | None:
+    if not rel_path:
+        return None
+    return f"/api/v1/tryon/result-image/{rel_path}"
 
 
 # ── endpoints ─────────────────────────────────────────────────────────────────
@@ -98,7 +93,7 @@ async def upload_selfie(
     db: Annotated[AsyncSession, Depends(get_db)],
     file: UploadFile = File(...),
 ) -> SelfieUploadResponse:
-    """Upload selfie, run GSAM segmentation, return detection results + session_id."""
+    """Upload selfie → GSAM segmentation → create TryonSession."""
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="File must be an image")
 
@@ -111,7 +106,6 @@ async def upload_selfie(
     with open(str(abs_person), "wb") as f:
         f.write(contents)
 
-    # Create session record
     tryon = TryonSession(
         id=session_id,
         user_id=current_user.id,
@@ -121,29 +115,26 @@ async def upload_selfie(
     db.add(tryon)
     await db.commit()
 
-    # GSAM segmentation (graceful degradation if service down)
     upper_url = lower_url = None
     upper_detected = lower_detected = False
 
     if _gsam.available:
         try:
-            upper_imgs, upper_det = _gsam.extract_upper_body(str(abs_person))
-            lower_imgs, lower_det = _gsam.extract_lower_body(str(abs_person))
+            upper_imgs, _ = _gsam.extract_upper_body(str(abs_person))
+            lower_imgs, _ = _gsam.extract_lower_body(str(abs_person))
 
             if upper_imgs:
-                rel = f"tryon/segments/{session_id}_upper.png"
-                _save_pil(upper_imgs[0], rel)
-                upper_url = _image_url(rel)
+                rel = _save_pil(upper_imgs[0], f"tryon/segments/{session_id}_upper.png")
+                upper_url = f"/api/v1/tryon/segment-image/{rel}"
                 upper_detected = True
 
             if lower_imgs:
-                rel = f"tryon/segments/{session_id}_lower.png"
-                _save_pil(lower_imgs[0], rel)
-                lower_url = _image_url(rel)
+                rel = _save_pil(lower_imgs[0], f"tryon/segments/{session_id}_lower.png")
+                lower_url = f"/api/v1/tryon/segment-image/{rel}"
                 lower_detected = True
 
         except Exception as exc:
-            logger.warning("GSAM segmentation failed for session %s: %s", session_id, exc)
+            logger.warning("GSAM failed for session %s: %s", session_id, exc)
 
     return SelfieUploadResponse(
         session_id=str(session_id),
@@ -152,6 +143,42 @@ async def upload_selfie(
         upper_image_url=upper_url,
         lower_image_url=lower_url,
     )
+
+
+@router.get("/item-image/{item_id}")
+async def get_item_image(
+    item_id: uuid.UUID,
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> FileResponse:
+    """Serve a demo clothing item image."""
+    item = await db.get(ClothingItem, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    abs_path = Path(settings.storage_path) / item.image_path
+    if not abs_path.exists():
+        raise HTTPException(status_code=404, detail="Image file not found")
+
+    return FileResponse(str(abs_path))
+
+
+@router.get("/segment-image/{path:path}")
+async def get_segment_image(path: str, current_user: CurrentUser) -> FileResponse:
+    """Serve a GSAM segmentation image."""
+    abs_path = Path(settings.storage_path) / path
+    if not abs_path.exists() or not abs_path.is_relative_to(Path(settings.storage_path)):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(str(abs_path))
+
+
+@router.get("/result-image/{path:path}")
+async def get_result_image(path: str, current_user: CurrentUser) -> FileResponse:
+    """Serve a VTON result image."""
+    abs_path = Path(settings.storage_path) / path
+    if not abs_path.exists() or not abs_path.is_relative_to(Path(settings.storage_path)):
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(str(abs_path))
 
 
 @router.get("/{session_id}", response_model=TryonStatusResponse)
@@ -168,7 +195,7 @@ async def get_tryon_status(
     return TryonStatusResponse(
         session_id=str(tryon.id),
         status=tryon.status,
-        result_image_url=_image_url(tryon.result_image_path),
+        result_image_url=_result_image_url(tryon.result_image_path),
         error_message=tryon.error_message,
     )
 
@@ -180,49 +207,57 @@ async def chat(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> StreamingResponse:
     """
-    Chat with 小镜. Returns an SSE stream.
-    Each event is a JSON object: {"type": "text"|"tool_start"|"tool_result"|"done"|"error", ...}
+    Chat with 小镜. SSE stream — each line: `data: <json>\\n\\n`
+    Event types: text | tool_start | tool_result | done | error
     """
     session_uuid = uuid.UUID(request.session_id)
     tryon = await db.get(TryonSession, session_uuid)
     if not tryon or tryon.user_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Session not found")
 
-    # Build tool handlers (closures capturing db + context)
+    person_image_path = tryon.person_image_path
+
+    # Tool handlers — all async, using the request's db session
     async def _show_recs() -> dict:
         return await handle_show_recommendations(db, current_user.id)
 
     async def _trigger_vton(garment_item_id: str) -> dict:
         result = await handle_trigger_virtual_tryon(
-            db, current_user.id, session_uuid, garment_item_id
+            db, current_user.id, person_image_path, garment_item_id
         )
-        # Queue the arq job
         if result.get("status") == "queued":
             try:
                 redis = await create_pool(get_redis_settings())
                 await redis.enqueue_job("run_vton_job", result["tryon_session_id"])
-                await redis.close()
+                await redis.aclose()
             except Exception as exc:
                 logger.warning("Failed to queue VTON job: %s", exc)
         return result
 
     async def _try_all() -> dict:
-        return await handle_try_all_lower(db, current_user.id, tryon.person_image_path)
+        result = await handle_try_all_lower(db, current_user.id, person_image_path)
+        if result.get("status") == "queued":
+            try:
+                redis = await create_pool(get_redis_settings())
+                for sid in result.get("session_ids", []):
+                    await redis.enqueue_job("run_vton_job", sid)
+                await redis.aclose()
+            except Exception as exc:
+                logger.warning("Failed to queue VTON jobs: %s", exc)
+        return result
 
     async def _add_wardrobe() -> dict:
-        return await handle_add_to_wardrobe(db, current_user.id, session_uuid)
+        return await handle_add_to_wardrobe(db, current_user.id)
 
-    # Wrap async handlers for sync MirrorAgent
-    # (MirrorAgent.stream_chat is sync; we run it in a thread below)
-    tool_handlers_sync = {
-        "show_recommendations": lambda: _run_sync(_show_recs()),
-        "trigger_virtual_tryon": lambda garment_item_id: _run_sync(_trigger_vton(garment_item_id)),
-        "try_all_lower": lambda: _run_sync(_try_all()),
-        "add_to_wardrobe": lambda: _run_sync(_add_wardrobe()),
+    tool_handlers = {
+        "show_recommendations": _show_recs,
+        "trigger_virtual_tryon": _trigger_vton,
+        "try_all_lower": _try_all,
+        "add_to_wardrobe": _add_wardrobe,
     }
 
-    def generate():
-        for event in _agent.stream_chat(request.history, tool_handlers_sync):
+    async def generate():
+        async for event in _agent.stream_chat(request.history, tool_handlers):
             yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
 
     return StreamingResponse(
@@ -230,18 +265,3 @@ async def chat(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
-
-
-def _run_sync(coro):
-    """Run an async coroutine synchronously (for use inside sync generator)."""
-    import asyncio
-    try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            import concurrent.futures
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                future = pool.submit(asyncio.run, coro)
-                return future.result(timeout=60)
-        return loop.run_until_complete(coro)
-    except Exception as exc:
-        return {"error": str(exc)}

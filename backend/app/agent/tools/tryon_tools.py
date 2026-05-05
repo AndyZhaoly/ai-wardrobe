@@ -1,20 +1,17 @@
 """
 Tool handlers for the try-on flow.
-These are called by MirrorAgent when Gemini invokes a function.
-Each handler receives a db session + current user via a closure built in the router.
+Each handler is an async callable invoked by MirrorAgent when Gemini calls a function.
 """
 
 from __future__ import annotations
 
 import logging
 import uuid
-from datetime import datetime, UTC
-from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.item import ClothingItem
+from app.models.item import ClothingItem, ItemStatus
 from app.models.tryon import TryonSession
 
 logger = logging.getLogger(__name__)
@@ -46,7 +43,8 @@ async def handle_show_recommendations(db: AsyncSession, user_id: uuid.UUID) -> d
                 "style": ", ".join(item.style or []),
                 "material": item.material or "",
                 "description": item.ai_description or "",
-                "image_url": f"/api/v1/images/{item.image_path}",
+                # Use a dedicated result endpoint — demo items don't have user-scoped paths
+                "image_url": f"/api/v1/tryon/item-image/{item.id}",
             }
             for i, item in enumerate(items)
         ],
@@ -56,13 +54,12 @@ async def handle_show_recommendations(db: AsyncSession, user_id: uuid.UUID) -> d
 async def handle_trigger_virtual_tryon(
     db: AsyncSession,
     user_id: uuid.UUID,
-    session_id: uuid.UUID,
+    person_image_path: str,
     garment_item_id: str,
 ) -> dict:
     """
-    Queue a virtual try-on job.
-    Creates a TryonSession record; the actual VTON runs in an arq worker.
-    Returns the session ID so the frontend can poll for status.
+    Create a NEW TryonSession for this garment (so multiple tries don't clobber each other).
+    Returns the new session_id for the frontend to poll.
     """
     try:
         garment_uuid = uuid.UUID(garment_item_id)
@@ -73,19 +70,19 @@ async def handle_trigger_virtual_tryon(
     if not garment:
         return {"status": "error", "message": "找不到该服装"}
 
-    # Map item type to IDM-VTON category
     category_map = {"upper": "upper_body", "lower": "lower_body", "dress": "dresses"}
-    vton_category = category_map.get(garment.type, "upper_body")
+    vton_category = category_map.get(garment.type, "lower_body")
 
-    # Update the existing tryon session (created at selfie upload time)
-    tryon = await db.get(TryonSession, session_id)
-    if tryon is None:
-        return {"status": "error", "message": "试衣会话不存在，请重新上传照片"}
-
-    tryon.garment_item_id = garment_uuid
-    tryon.clothing_category = vton_category
-    tryon.status = "pending"
+    tryon = TryonSession(
+        user_id=user_id,
+        person_image_path=person_image_path,
+        garment_item_id=garment_uuid,
+        clothing_category=vton_category,
+        status="pending",
+    )
+    db.add(tryon)
     await db.commit()
+    await db.refresh(tryon)
 
     return {
         "status": "queued",
@@ -99,10 +96,9 @@ async def handle_try_all_lower(
     user_id: uuid.UUID,
     person_image_path: str,
 ) -> dict:
-    """Queue try-on jobs for all lower-body demo items."""
+    """Queue try-on for all lower-body demo items; return list of session IDs."""
     result = await db.execute(
-        select(ClothingItem)
-        .where(
+        select(ClothingItem).where(
             ClothingItem.is_demo == True,  # noqa: E712
             ClothingItem.type == "lower",
             ClothingItem.is_archived == False,  # noqa: E712
@@ -126,6 +122,8 @@ async def handle_try_all_lower(
         sessions.append(session)
 
     await db.commit()
+    for s in sessions:
+        await db.refresh(s)
 
     return {
         "status": "queued",
@@ -138,12 +136,22 @@ async def handle_try_all_lower(
 async def handle_add_to_wardrobe(
     db: AsyncSession,
     user_id: uuid.UUID,
-    session_id: uuid.UUID,
 ) -> dict:
-    """Save the try-on result image as a new clothing item in the user's wardrobe."""
-    tryon = await db.get(TryonSession, session_id)
-    if not tryon or tryon.status != "done" or not tryon.result_image_path:
-        return {"status": "error", "message": "试穿还未完成或结果不可用"}
+    """Save the most recently completed try-on result as a wardrobe item."""
+    result = await db.execute(
+        select(TryonSession)
+        .where(
+            TryonSession.user_id == user_id,
+            TryonSession.status == "done",
+            TryonSession.result_image_path.is_not(None),
+        )
+        .order_by(TryonSession.completed_at.desc())
+        .limit(1)
+    )
+    tryon = result.scalar_one_or_none()
+
+    if not tryon:
+        return {"status": "error", "message": "还没有完成的试穿结果，请先完成试衣"}
 
     garment = await db.get(ClothingItem, tryon.garment_item_id) if tryon.garment_item_id else None
 
@@ -154,13 +162,13 @@ async def handle_add_to_wardrobe(
         name=f"试穿结果：{garment.name}" if garment else "试穿结果",
         source="tryon",
         is_demo=False,
-        style=garment.style if garment else [],
-        colors=garment.colors if garment else [],
+        style=list(garment.style or []) if garment else [],
+        colors=list(garment.colors or []) if garment else [],
         primary_color=garment.primary_color if garment else None,
         material=garment.material if garment else None,
+        season=list(garment.season or []) if garment else [],
         tags={},
-        season=[],
-        status="ready",
+        status=ItemStatus.ready,
         ai_processed=True,
     )
     db.add(new_item)

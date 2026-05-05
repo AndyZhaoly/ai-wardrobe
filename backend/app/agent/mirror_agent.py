@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import time
-from collections.abc import Iterator
+from collections.abc import AsyncGenerator
 from typing import Any
 
 from openai import APIError, OpenAI, RateLimitError
@@ -85,7 +85,7 @@ TOOL_DEFS = [
         "type": "function",
         "function": {
             "name": "add_to_wardrobe",
-            "description": "将主人满意的试穿结果纳入数字衣柜。主人表示满意时调用。",
+            "description": "将主人最近满意的试穿结果纳入数字衣柜。主人表示满意时调用。",
             "parameters": {"type": "object", "properties": {}, "required": []},
         },
     },
@@ -95,7 +95,7 @@ TOOL_DEFS = [
 class MirrorAgent:
     """
     Stateless agent — callers pass the full message history each time.
-    Tool results are injected by the caller via tool_handlers dict.
+    Tool handlers are async callables injected by the caller.
     """
 
     def __init__(self) -> None:
@@ -113,102 +113,20 @@ class MirrorAgent:
     def _available(self) -> bool:
         return self._client is not None
 
-    def chat(
+    async def stream_chat(
         self,
         messages: list[dict],
         tool_handlers: dict[str, Any],
-        *,
-        max_tool_rounds: int = 6,
-        max_retries: int = 3,
-    ) -> tuple[str, list[dict]]:
+    ) -> AsyncGenerator[dict, None]:
         """
-        Run one chat turn.
-
-        Args:
-            messages: Full conversation history (excluding system prompt — added here).
-            tool_handlers: {tool_name: callable(**kwargs) -> dict}
-            max_tool_rounds: Max number of tool-call rounds per turn.
-            max_retries: API error retries.
-
-        Returns:
-            (reply_text, updated_messages) — caller stores updated_messages.
-        """
-        if not self._available():
-            return "（演示模式：请在服务端配置 GEMINI_API_KEY）", messages
-
-        full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
-
-        for attempt in range(max_retries):
-            try:
-                for _ in range(max_tool_rounds):
-                    resp = self._client.chat.completions.create(
-                        model=self.model,
-                        messages=full_messages,
-                        tools=TOOL_DEFS,
-                        tool_choice="auto",
-                        temperature=1.0,
-                        max_tokens=2000,
-                    )
-                    msg = resp.choices[0].message
-
-                    if not msg.tool_calls:
-                        text = msg.content or "小镜已为您处理完毕～"
-                        full_messages.append({"role": "assistant", "content": text})
-                        return text, full_messages[1:]  # strip system prompt before returning
-
-                    # process tool calls
-                    full_messages.append({
-                        "role": "assistant",
-                        "content": msg.content or "",
-                        "tool_calls": [tc.model_dump() for tc in msg.tool_calls],
-                    })
-                    for tc in msg.tool_calls:
-                        fn_name = tc.function.name
-                        fn_args = json.loads(tc.function.arguments)
-                        logger.info("MirrorAgent tool call: %s(%s)", fn_name, fn_args)
-                        handler = tool_handlers.get(fn_name)
-                        if handler is None:
-                            result = {"error": f"Unknown tool: {fn_name}"}
-                        else:
-                            try:
-                                result = handler(**fn_args)
-                            except Exception as exc:
-                                logger.exception("Tool %s raised: %s", fn_name, exc)
-                                result = {"error": str(exc)}
-                        full_messages.append({
-                            "role": "tool",
-                            "tool_call_id": tc.id,
-                            "content": json.dumps(result, ensure_ascii=False),
-                        })
-
-                return "小镜已为您处理完毕～", full_messages[1:]
-
-            except (RateLimitError, APIError) as exc:
-                err = str(exc)
-                logger.warning("MirrorAgent API error (attempt %d/%d): %s", attempt + 1, max_retries, exc)
-                if attempt < max_retries - 1:
-                    wait = 15 if "503" in err or "UNAVAILABLE" in err else 2 ** (attempt + 1)
-                    time.sleep(wait)
-                else:
-                    return "API 服务器太忙了，请稍后再试…", messages
-            except Exception as exc:
-                logger.exception("MirrorAgent unexpected error: %s", exc)
-                return f"出错了：{str(exc)[:100]}", messages
-
-        return "小镜遇到了一些问题，请稍后再试～", messages
-
-    def stream_chat(
-        self,
-        messages: list[dict],
-        tool_handlers: dict[str, Any],
-    ) -> Iterator[dict]:
-        """
-        Streaming variant — yields server-sent event payloads:
+        Async generator — yields SSE event payloads:
           {"type": "text", "delta": "..."}
-          {"type": "tool_start", "name": "show_recommendations"}
+          {"type": "tool_start", "name": "..."}
           {"type": "tool_result", "name": "...", "result": {...}}
           {"type": "done", "messages": [...]}
           {"type": "error", "message": "..."}
+
+        tool_handlers: {tool_name: async_callable(**kwargs) -> dict}
         """
         if not self._available():
             yield {"type": "text", "delta": "（演示模式：请配置 GEMINI_API_KEY）"}
@@ -218,7 +136,7 @@ class MirrorAgent:
         full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
 
         try:
-            for _ in range(6):
+            for _ in range(6):  # max tool-call rounds
                 resp = self._client.chat.completions.create(
                     model=self.model,
                     messages=full_messages,
@@ -241,18 +159,23 @@ class MirrorAgent:
                     "content": msg.content or "",
                     "tool_calls": [tc.model_dump() for tc in msg.tool_calls],
                 })
+
                 for tc in msg.tool_calls:
                     fn_name = tc.function.name
                     fn_args = json.loads(tc.function.arguments)
+                    logger.info("MirrorAgent tool call: %s(%s)", fn_name, fn_args)
                     yield {"type": "tool_start", "name": fn_name}
+
                     handler = tool_handlers.get(fn_name)
                     if handler is None:
-                        result = {"error": f"Unknown tool: {fn_name}"}
+                        result: dict = {"error": f"Unknown tool: {fn_name}"}
                     else:
                         try:
-                            result = handler(**fn_args)
+                            result = await handler(**fn_args)
                         except Exception as exc:
+                            logger.exception("Tool %s raised: %s", fn_name, exc)
                             result = {"error": str(exc)}
+
                     yield {"type": "tool_result", "name": fn_name, "result": result}
                     full_messages.append({
                         "role": "tool",
@@ -262,6 +185,9 @@ class MirrorAgent:
 
             yield {"type": "done", "messages": full_messages[1:]}
 
+        except (RateLimitError, APIError) as exc:
+            logger.warning("MirrorAgent API error: %s", exc)
+            yield {"type": "error", "message": "API 服务器太忙了，请稍后再试…"}
         except Exception as exc:
-            logger.exception("MirrorAgent stream error: %s", exc)
-            yield {"type": "error", "message": str(exc)[:200]}
+            logger.exception("MirrorAgent unexpected error: %s", exc)
+            yield {"type": "error", "message": f"出错了：{str(exc)[:100]}"}
