@@ -10,6 +10,7 @@ from app.api.images import router as images_router
 from app.api.items import router as items_router
 from app.api.learning import router as learning_router
 from app.api.tryon import router as tryon_router
+from app.api.resale import router as resale_router
 from app.api.notifications import router as notifications_router
 from app.api.outfits import router as outfits_router
 from app.api.pairings import router as pairings_router
@@ -34,3 +35,4 @@ api_router.include_router(notifications_router, prefix="/notifications", tags=["
 api_router.include_router(analytics_router)
 api_router.include_router(learning_router)
 api_router.include_router(tryon_router)
+api_router.include_router(resale_router)

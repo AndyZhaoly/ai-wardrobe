@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt requirements-extras.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -r requirements-extras.txt
 
+# Install Playwright browser for Poshmark automation
+RUN playwright install chromium --with-deps
+
 # Pre-download rembg model so first request is instant
 RUN python -c "from rembg import new_session; new_session()"
 

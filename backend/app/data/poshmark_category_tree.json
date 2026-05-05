@@ -1,0 +1,728 @@
+[
+  {
+    "id": "000e8975d97b4e80ef00a955",
+    "display": "Women",
+    "slug": "Women",
+    "categories": [
+      {
+        "id": "00248975d97b4e80ef00a955",
+        "display": "Bags",
+        "slug": "Bags",
+        "subcategories": []
+      },
+      {
+        "id": "00268975d97b4e80ef00a955",
+        "display": "Shoes",
+        "slug": "Shoes",
+        "subcategories": []
+      },
+      {
+        "id": "002a8975d97b4e80ef00a955",
+        "display": "Accessories",
+        "slug": "Accessories",
+        "subcategories": []
+      },
+      {
+        "id": "00108975d97b4e80ef00a955",
+        "display": "Dresses",
+        "slug": "Dresses",
+        "subcategories": []
+      },
+      {
+        "id": "00208975d97b4e80ef00a955",
+        "display": "Intimates & Sleepwear",
+        "slug": "Intimates_&_Sleepwear",
+        "subcategories": []
+      },
+      {
+        "id": "00148975d97b4e80ef00a955",
+        "display": "Jackets & Coats",
+        "slug": "Jackets_&_Coats",
+        "subcategories": []
+      },
+      {
+        "id": "001a8975d97b4e80ef00a955",
+        "display": "Jeans",
+        "slug": "Jeans",
+        "subcategories": []
+      },
+      {
+        "id": "001c8975d97b4e80ef00a955",
+        "display": "Pants & Jumpsuits",
+        "slug": "Pants_&_Jumpsuits",
+        "subcategories": []
+      },
+      {
+        "id": "001e8975d97b4e80ef00a955",
+        "display": "Shorts",
+        "slug": "Shorts",
+        "subcategories": []
+      },
+      {
+        "id": "00128975d97b4e80ef00a955",
+        "display": "Skirts",
+        "slug": "Skirts",
+        "subcategories": []
+      },
+      {
+        "id": "00168975d97b4e80ef00a955",
+        "display": "Sweaters",
+        "slug": "Sweaters",
+        "subcategories": []
+      },
+      {
+        "id": "00228975d97b4e80ef00a955",
+        "display": "Swim",
+        "slug": "Swim",
+        "subcategories": []
+      },
+      {
+        "id": "00188975d97b4e80ef00a955",
+        "display": "Tops",
+        "slug": "Tops",
+        "subcategories": []
+      },
+      {
+        "id": "002e8975d97b4e80ef00a955",
+        "display": "Other",
+        "slug": "Other",
+        "subcategories": []
+      },
+      {
+        "id": "00288975d97b4e80ef00a955",
+        "display": "Jewelry",
+        "slug": "Jewelry",
+        "subcategories": []
+      },
+      {
+        "id": "002c8975d97b4e80ef00a955",
+        "display": "Makeup",
+        "slug": "Makeup",
+        "subcategories": []
+      },
+      {
+        "id": "6e7df9aaaabb083120f45ec2",
+        "display": "Skincare",
+        "slug": "Skincare",
+        "subcategories": []
+      },
+      {
+        "id": "6f7df9aaaabb083120f45ec2",
+        "display": "Hair",
+        "slug": "Hair",
+        "subcategories": []
+      },
+      {
+        "id": "707df9aaaabb083120f45ec2",
+        "display": "Bath & Body",
+        "slug": "Bath_&_Body",
+        "subcategories": []
+      },
+      {
+        "id": "9ab476dc402403bf28a2606b",
+        "display": "Ao Dais",
+        "slug": "Ao_Dais",
+        "subcategories": []
+      },
+      {
+        "id": "9bb476dc402403bf28a2606b",
+        "display": "Cheongsams & Qipaos",
+        "slug": "Cheongsams_&_Qipaos",
+        "subcategories": []
+      },
+      {
+        "id": "9db476dc402403bf28a2606b",
+        "display": "Dirndls",
+        "slug": "Dirndls",
+        "subcategories": []
+      },
+      {
+        "id": "a2b476dd402403bf28a2606b",
+        "display": "Dupattas & Stoles",
+        "slug": "Dupattas_&_Stoles",
+        "subcategories": []
+      },
+      {
+        "id": "9cb476dc402403bf28a2606b",
+        "display": "Hanboks",
+        "slug": "Hanboks",
+        "subcategories": []
+      },
+      {
+        "id": "a3b476dd402403bf28a2606b",
+        "display": "Harem Pants",
+        "slug": "Harem_Pants",
+        "subcategories": []
+      },
+      {
+        "id": "9eb476dc402403bf28a2606b",
+        "display": "Hijabs",
+        "slug": "Hijabs",
+        "subcategories": []
+      },
+      {
+        "id": "9fb476dd402403bf28a2606b",
+        "display": "Huipils",
+        "slug": "Huipils",
+        "subcategories": []
+      },
+      {
+        "id": "a0b476dd402403bf28a2606b",
+        "display": "Kaftans",
+        "slug": "Kaftans",
+        "subcategories": []
+      },
+      {
+        "id": "a1b476dd402403bf28a2606b",
+        "display": "Kimonos & Yukatas",
+        "slug": "Kimonos_&_Yukatas",
+        "subcategories": []
+      },
+      {
+        "id": "a4b476dd402403bf28a2606b",
+        "display": "Kurta Bottoms",
+        "slug": "Kurta_Bottoms",
+        "subcategories": []
+      },
+      {
+        "id": "a5b476dd402403bf28a2606b",
+        "display": "Kurtas",
+        "slug": "Kurtas",
+        "subcategories": []
+      },
+      {
+        "id": "a6b476dd402403bf28a2606b",
+        "display": "Lehengas",
+        "slug": "Lehengas",
+        "subcategories": []
+      },
+      {
+        "id": "a7b476dd402403bf28a2606b",
+        "display": "Palazzo Pants",
+        "slug": "Palazzo_Pants",
+        "subcategories": []
+      },
+      {
+        "id": "a8b476dd402403bf28a2606b",
+        "display": "Patiala Pants",
+        "slug": "Patiala_Pants",
+        "subcategories": []
+      },
+      {
+        "id": "a9b476dd402403bf28a2606b",
+        "display": "Salwars",
+        "slug": "Salwars",
+        "subcategories": []
+      },
+      {
+        "id": "aab476dd402403bf28a2606b",
+        "display": "Saree Blouses",
+        "slug": "Saree_Blouses",
+        "subcategories": []
+      },
+      {
+        "id": "abb476dd402403bf28a2606b",
+        "display": "Sarees",
+        "slug": "Sarees",
+        "subcategories": []
+      },
+      {
+        "id": "acb476dd402403bf28a2606b",
+        "display": "Treggings",
+        "slug": "Treggings",
+        "subcategories": []
+      }
+    ]
+  },
+  {
+    "id": "01008c10d97b4e1245005764",
+    "display": "Men",
+    "slug": "Men",
+    "categories": [
+      {
+        "id": "03008c10d97b4e1245005764",
+        "display": "Bags",
+        "slug": "Bags",
+        "subcategories": []
+      },
+      {
+        "id": "08008c10d97b4e1245005764",
+        "display": "Shoes",
+        "slug": "Shoes",
+        "subcategories": []
+      },
+      {
+        "id": "02008c10d97b4e1245005764",
+        "display": "Accessories",
+        "slug": "Accessories",
+        "subcategories": []
+      },
+      {
+        "id": "04008c10d97b4e1245005764",
+        "display": "Jackets & Coats",
+        "slug": "Jackets_&_Coats",
+        "subcategories": []
+      },
+      {
+        "id": "05008c10d97b4e1245005764",
+        "display": "Jeans",
+        "slug": "Jeans",
+        "subcategories": []
+      },
+      {
+        "id": "06008c10d97b4e1245005764",
+        "display": "Pants",
+        "slug": "Pants",
+        "subcategories": []
+      },
+      {
+        "id": "07008c10d97b4e1245005764",
+        "display": "Shirts",
+        "slug": "Shirts",
+        "subcategories": []
+      },
+      {
+        "id": "09008c10d97b4e1245005764",
+        "display": "Shorts",
+        "slug": "Shorts",
+        "subcategories": []
+      },
+      {
+        "id": "0a008c10d97b4e1245005764",
+        "display": "Suits & Blazers",
+        "slug": "Suits_&_Blazers",
+        "subcategories": []
+      },
+      {
+        "id": "0b008c10d97b4e1245005764",
+        "display": "Sweaters",
+        "slug": "Sweaters",
+        "subcategories": []
+      },
+      {
+        "id": "0d008c10d97b4e1245005764",
+        "display": "Swim",
+        "slug": "Swim",
+        "subcategories": []
+      },
+      {
+        "id": "0e008c10d97b4e1245005764",
+        "display": "Underwear & Socks",
+        "slug": "Underwear_&_Socks",
+        "subcategories": []
+      },
+      {
+        "id": "10008c10d97b4e1245005764",
+        "display": "Other",
+        "slug": "Other",
+        "subcategories": []
+      },
+      {
+        "id": "717df9aaaabb083120f45ec2",
+        "display": "Grooming",
+        "slug": "Grooming",
+        "subcategories": []
+      },
+      {
+        "id": "b2b476dd402403bf28a2606b",
+        "display": "Agbadas & Dashikis",
+        "slug": "Agbadas_&_Dashikis",
+        "subcategories": []
+      },
+      {
+        "id": "b3b476dd402403bf28a2606b",
+        "display": "Ao Dais",
+        "slug": "Ao_Dais",
+        "subcategories": []
+      },
+      {
+        "id": "b4b476dd402403bf28a2606b",
+        "display": "Changshans",
+        "slug": "Changshans",
+        "subcategories": []
+      },
+      {
+        "id": "b5b476dd402403bf28a2606b",
+        "display": "Hanboks",
+        "slug": "Hanboks",
+        "subcategories": []
+      },
+      {
+        "id": "b6b476dd402403bf28a2606b",
+        "display": "Kaftans",
+        "slug": "Kaftans",
+        "subcategories": []
+      },
+      {
+        "id": "b7b476dd402403bf28a2606b",
+        "display": "Keffiyehs",
+        "slug": "Keffiyehs",
+        "subcategories": []
+      },
+      {
+        "id": "b8b476dd402403bf28a2606b",
+        "display": "Kilts",
+        "slug": "Kilts",
+        "subcategories": []
+      },
+      {
+        "id": "b9b476dd402403bf28a2606b",
+        "display": "Kimonos & Yukatas",
+        "slug": "Kimonos_&_Yukatas",
+        "subcategories": []
+      },
+      {
+        "id": "aeb476dd402403bf28a2606b",
+        "display": "Kurta Bottoms",
+        "slug": "Kurta_Bottoms",
+        "subcategories": []
+      },
+      {
+        "id": "afb476dd402403bf28a2606b",
+        "display": "Kurtas",
+        "slug": "Kurtas",
+        "subcategories": []
+      },
+      {
+        "id": "bab476dd402403bf28a2606b",
+        "display": "Lederhosen",
+        "slug": "Lederhosen",
+        "subcategories": []
+      },
+      {
+        "id": "b0b476dd402403bf28a2606b",
+        "display": "Nehru Jackets",
+        "slug": "Nehru_Jackets",
+        "subcategories": []
+      },
+      {
+        "id": "bbb476dd402403bf28a2606b",
+        "display": "Ponchos & Serapes",
+        "slug": "Ponchos_&_Serapes",
+        "subcategories": []
+      },
+      {
+        "id": "b1b476dd402403bf28a2606b",
+        "display": "Sherwanis",
+        "slug": "Sherwanis",
+        "subcategories": []
+      }
+    ]
+  },
+  {
+    "id": "20008c10d97b4e1245005764",
+    "display": "Kids",
+    "slug": "Kids",
+    "categories": [
+      {
+        "id": "29008c10d97b4e1245005764",
+        "display": "Shoes",
+        "slug": "Shoes",
+        "subcategories": []
+      },
+      {
+        "id": "21008c10d97b4e1245005764",
+        "display": "Accessories",
+        "slug": "Accessories",
+        "subcategories": []
+      },
+      {
+        "id": "24002b34d97b4efb71005784",
+        "display": "Bottoms",
+        "slug": "Bottoms",
+        "subcategories": []
+      },
+      {
+        "id": "22008c10d97b4e1245005764",
+        "display": "Dresses",
+        "slug": "Dresses",
+        "subcategories": []
+      },
+      {
+        "id": "23008c10d97b4e1245005764",
+        "display": "Jackets & Coats",
+        "slug": "Jackets_&_Coats",
+        "subcategories": []
+      },
+      {
+        "id": "26008c10d97b4e1245005764",
+        "display": "Matching Sets",
+        "slug": "Matching_Sets",
+        "subcategories": []
+      },
+      {
+        "id": "25008c10d97b4e1245005764",
+        "display": "One Pieces",
+        "slug": "One_Pieces",
+        "subcategories": []
+      },
+      {
+        "id": "27008c10d97b4e1245005764",
+        "display": "Pajamas",
+        "slug": "Pajamas",
+        "subcategories": []
+      },
+      {
+        "id": "2e008c10d97b4e1245005764",
+        "display": "Shirts & Tops",
+        "slug": "Shirts_&_Tops",
+        "subcategories": []
+      },
+      {
+        "id": "2d008c10d97b4e1245005764",
+        "display": "Swim",
+        "slug": "Swim",
+        "subcategories": []
+      },
+      {
+        "id": "31008c10d97b4e1245005764",
+        "display": "Other",
+        "slug": "Other",
+        "subcategories": []
+      },
+      {
+        "id": "727df9aaaabb083120f45ec2",
+        "display": "Bath, Skin & Hair",
+        "slug": "Bath,_Skin_&_Hair",
+        "subcategories": []
+      },
+      {
+        "id": "737df9aaaabb083120f45ec2",
+        "display": "Toys",
+        "slug": "Toys",
+        "subcategories": []
+      },
+      {
+        "id": "30008c10d97b4e1245005764",
+        "display": "Costumes",
+        "slug": "Costumes",
+        "subcategories": []
+      }
+    ]
+  },
+  {
+    "id": "5b3b13d30640fd0aeb9c5cb6",
+    "display": "Home",
+    "slug": "Home",
+    "categories": [
+      {
+        "id": "5c3b13d30640fd0aeb9c5cb6",
+        "display": "Accents",
+        "slug": "Accents",
+        "subcategories": []
+      },
+      {
+        "id": "c66f798f402403a7f0016033",
+        "display": "Art",
+        "slug": "Art",
+        "subcategories": []
+      },
+      {
+        "id": "5d3b13d30640fd0aeb9c5cb6",
+        "display": "Bath",
+        "slug": "Bath",
+        "subcategories": []
+      },
+      {
+        "id": "5e3b13d30640fd0aeb9c5cb6",
+        "display": "Bedding",
+        "slug": "Bedding",
+        "subcategories": []
+      },
+      {
+        "id": "c76f798f402403a7f0016033",
+        "display": "Design",
+        "slug": "Design",
+        "subcategories": []
+      },
+      {
+        "id": "bc5eb22d0640fd1ab51c5d0b",
+        "display": "Dining",
+        "slug": "Dining",
+        "subcategories": []
+      },
+      {
+        "id": "747df9aaaabb083120f45ec2",
+        "display": "Games",
+        "slug": "Games",
+        "subcategories": []
+      },
+      {
+        "id": "5f3b13d30640fd0aeb9c5cb6",
+        "display": "Holiday",
+        "slug": "Holiday",
+        "subcategories": []
+      },
+      {
+        "id": "bb5eb22d0640fd1ab51c5d0b",
+        "display": "Kitchen",
+        "slug": "Kitchen",
+        "subcategories": []
+      },
+      {
+        "id": "603b13d30640fd0aeb9c5cb6",
+        "display": "Office",
+        "slug": "Office",
+        "subcategories": []
+      },
+      {
+        "id": "613b13d30640fd0aeb9c5cb6",
+        "display": "Party Supplies",
+        "slug": "Party_Supplies",
+        "subcategories": []
+      },
+      {
+        "id": "623b13d30640fd0aeb9c5cb6",
+        "display": "Storage & Organization",
+        "slug": "Storage_&_Organization",
+        "subcategories": []
+      },
+      {
+        "id": "633b13d30640fd0aeb9c5cb6",
+        "display": "Wall Decor",
+        "slug": "Wall_Decor",
+        "subcategories": []
+      },
+      {
+        "id": "a93b13d30640fd0aeb9c5cb6",
+        "display": "Other",
+        "slug": "Other",
+        "subcategories": []
+      }
+    ]
+  },
+  {
+    "id": "af08bf904024037d7a7b5fad",
+    "display": "Pets",
+    "slug": "Pets",
+    "categories": [
+      {
+        "id": "b008bf914024037d7a7b5fad",
+        "display": "Dog",
+        "slug": "Dog",
+        "subcategories": []
+      },
+      {
+        "id": "b108bf914024037d7a7b5fad",
+        "display": "Cat",
+        "slug": "Cat",
+        "subcategories": []
+      },
+      {
+        "id": "b208bf914024037d7a7b5fad",
+        "display": "Bird",
+        "slug": "Bird",
+        "subcategories": []
+      },
+      {
+        "id": "b308bf914024037d7a7b5fad",
+        "display": "Fish",
+        "slug": "Fish",
+        "subcategories": []
+      },
+      {
+        "id": "b408bf914024037d7a7b5fad",
+        "display": "Reptile",
+        "slug": "Reptile",
+        "subcategories": []
+      },
+      {
+        "id": "b508bf914024037d7a7b5fad",
+        "display": "Small Pets",
+        "slug": "Small_Pets",
+        "subcategories": []
+      },
+      {
+        "id": "b608bf914024037d7a7b5fad",
+        "display": "Other",
+        "slug": "Other",
+        "subcategories": []
+      }
+    ]
+  },
+  {
+    "id": "583c7d134024035188906153",
+    "display": "Electronics",
+    "slug": "Electronics",
+    "categories": [
+      {
+        "id": "428e4884402403bc7f6c6157",
+        "display": "Cameras, Photo & Video",
+        "slug": "Cameras,_Photo_&_Video",
+        "subcategories": []
+      },
+      {
+        "id": "438e4884402403bc7f6c6157",
+        "display": "Computers, Laptops & Parts",
+        "slug": "Computers,_Laptops_&_Parts",
+        "subcategories": []
+      },
+      {
+        "id": "4e8e4884402403bc7f6c6157",
+        "display": "Tablets & Accessories",
+        "slug": "Tablets_&_Accessories",
+        "subcategories": []
+      },
+      {
+        "id": "448e4884402403bc7f6c6157",
+        "display": "Cell Phones & Accessories",
+        "slug": "Cell_Phones_&_Accessories",
+        "subcategories": []
+      },
+      {
+        "id": "468e4884402403bc7f6c6157",
+        "display": "Video Games & Consoles",
+        "slug": "Video_Games_&_Consoles",
+        "subcategories": []
+      },
+      {
+        "id": "478e4884402403bc7f6c6157",
+        "display": "Car Audio, Video & GPS",
+        "slug": "Car_Audio,_Video_&_GPS",
+        "subcategories": []
+      },
+      {
+        "id": "488e4884402403bc7f6c6157",
+        "display": "Media",
+        "slug": "Media",
+        "subcategories": []
+      },
+      {
+        "id": "498e4884402403bc7f6c6157",
+        "display": "Wearables",
+        "slug": "Wearables",
+        "subcategories": []
+      },
+      {
+        "id": "4c8e4884402403bc7f6c6157",
+        "display": "Headphones",
+        "slug": "Headphones",
+        "subcategories": []
+      },
+      {
+        "id": "4d8e4884402403bc7f6c6157",
+        "display": "Portable Audio & Video",
+        "slug": "Portable_Audio_&_Video",
+        "subcategories": []
+      },
+      {
+        "id": "508e4884402403bc7f6c6157",
+        "display": "VR, AR & Accessories",
+        "slug": "VR,_AR_&_Accessories",
+        "subcategories": []
+      },
+      {
+        "id": "518e4884402403bc7f6c6157",
+        "display": "Networking",
+        "slug": "Networking",
+        "subcategories": []
+      },
+      {
+        "id": "548e4884402403bc7f6c6157",
+        "display": "Other",
+        "slug": "Other",
+        "subcategories": []
+      }
+    ]
+  }
+]
